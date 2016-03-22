@@ -22,7 +22,7 @@ import java.net.URLClassLoader;
 public class Main extends Application {
     private Stage window;
     private BorderPane layout;
-    private TableView</*StudentRecord*/> table;
+    private TableView<TextFiles> table;
 
 
     @Override
@@ -38,39 +38,40 @@ public class Main extends Application {
         editArea.setVgap(10);
         editArea.setHgap(10);
 
-        /*TableColumn<Client,String> clientColumn = null;
+        TableColumn<TextFiles,String> clientColumn = null;
         clientColumn = new TableColumn<>();
         clientColumn.setMinWidth(300);
 
-        TableColumn<Server,String> serverColumn = null;
+        TableColumn<TextFiles,String> serverColumn = null;
         serverColumn = new TableColumn<>();
-        serverColumn.setMinWidth(300);*/
+        serverColumn.setMinWidth(300);
 
         Button uploadButton = new Button("Upload");
-        uploadButton.setOnAction(new EventHandler<ActionEvent>()) {
-            @Override
-                public void handle(ActionEvent event) {
-
-                }
-        }
-
-        Button downloadButton = new Button("Download");
-        downloadButton.setOnAction(new EventHandler<ActionEvent>()) {
+        uploadButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                System.out.println("Upload Pressed");
             }
-        }
+        });
+
+        Button downloadButton = new Button("Download");
+        downloadButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Download Pressed");
+            }
+        });
 
 
 
         editArea.add(downloadButton, 0, 0);
-        editArea.add(uploadButton, 1, 0);*/
+        editArea.add(uploadButton, 1, 0);
         table.getColumns().add(clientColumn);
         table.getColumns().add(serverColumn);
 
         layout = new BorderPane();
         layout.setCenter(table);
+        layout.setTop(editArea);
 
         Scene scene = new Scene(layout, 900, 600);
         primaryStage.setScene(scene);
