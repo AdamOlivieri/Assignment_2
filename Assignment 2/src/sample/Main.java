@@ -73,7 +73,7 @@ public class Main extends Application {
         layout.setCenter(table);
         layout.setTop(editArea);
 
-        Scene scene = new Scene(layout, 900, 600);
+        Scene scene = new Scene(layout, 600, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
