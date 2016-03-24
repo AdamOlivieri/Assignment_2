@@ -22,7 +22,8 @@ import java.net.URLClassLoader;
 public class Main extends Application {
     private Stage window;
     private BorderPane layout;
-    private TableView<TextFiles> table;
+    private TableView</*NEED A CLASS HERE THAT RETURNS TWO TYPES CLIENT AND SERVER*/> table;
+    //private TableView<File> serverTable;
 
 
     @Override
@@ -30,7 +31,7 @@ public class Main extends Application {
         primaryStage.setTitle("FileSharer v1.0");
 
         table = new TableView<>();
-        //table.setItems();
+        table.setItems(DataSource.getAllClientTextFiles());
         table.setEditable(false);
 
         GridPane editArea = new GridPane();
@@ -38,11 +39,11 @@ public class Main extends Application {
         editArea.setVgap(10);
         editArea.setHgap(10);
 
-        TableColumn<TextFiles,String> clientColumn = null;
+        TableColumn</*NEEDED CLASS HERE TOO*/,String> clientColumn = null;
         clientColumn = new TableColumn<>();
         clientColumn.setMinWidth(300);
 
-        TableColumn<TextFiles,String> serverColumn = null;
+        TableColumn</*NEEDED CLASS HERE TOO*/,String> serverColumn = null;
         serverColumn = new TableColumn<>();
         serverColumn.setMinWidth(300);
 
