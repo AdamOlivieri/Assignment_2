@@ -22,7 +22,7 @@ import java.net.URLClassLoader;
 public class Main extends Application {
     private Stage window;
     private BorderPane layout;
-    private TableView</*NEED A CLASS HERE THAT RETURNS TWO TYPES CLIENT AND SERVER*/> table;
+    private TableView<File> table;
     //private TableView<File> serverTable;
 
 
@@ -39,11 +39,12 @@ public class Main extends Application {
         editArea.setVgap(10);
         editArea.setHgap(10);
 
-        TableColumn</*NEEDED CLASS HERE TOO*/,String> clientColumn = null;
+        TableColumn<File,String> clientColumn = null;
         clientColumn = new TableColumn<>();
         clientColumn.setMinWidth(300);
+        clientColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn</*NEEDED CLASS HERE TOO*/,String> serverColumn = null;
+        TableColumn<File, String> serverColumn = null;
         serverColumn = new TableColumn<>();
         serverColumn.setMinWidth(300);
 
