@@ -2,51 +2,44 @@ package application;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.chart.PieChart;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.*;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.image.*;
-import javafx.collections.*;
 import javafx.event.*;
-import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.cell.*;
-
 import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 public class Main extends Application {
-    private Stage window;
     private BorderPane layout;
-    private TableView<File> table;
-    //private TableView<File> serverTable;
-
+    private TableView<File> clientTable;
+    private TableView<File> serverTable;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setTitle("FileSharer v1.0");
 
-        table = new TableView<>();
-        table.setItems(DataSource.getAllClientTextFiles());
-        table.setEditable(false);
+        clientTable = new TableView<>();
+        clientTable.setItems(DataSource.getAllClientTextFiles());
 
-        GridPane editArea = new GridPane();
-        editArea.setPadding(new Insets(10, 10, 10, 10));
-        editArea.setVgap(10);
-        editArea.setHgap(10);
+        serverTable = new TableView<>();
+        serverTable.setItems(DataSource.getAllServerTextFiles());
 
-        TableColumn<File,String> clientColumn = null;
-        clientColumn = new TableColumn<>();
-        clientColumn.setMinWidth(300);
-        clientColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        GridPane buttonArea = new GridPane();
+        buttonArea.setPadding(new Insets(10, 10, 10, 10));
+        buttonArea.setVgap(10);
+        buttonArea.setHgap(10);
 
-        TableColumn<File, String> serverColumn = null;
-        serverColumn = new TableColumn<>();
+        TableColumn<File,String> localColumn;
+        localColumn = new TableColumn<>("Local");
+        localColumn.setMinWidth(300);
+        localColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        TableColumn<File,String> serverColumn;
+        serverColumn = new TableColumn<>("Server");
         serverColumn.setMinWidth(300);
+        serverColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
         Button uploadButton = new Button("Upload");
         uploadButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -66,14 +59,16 @@ public class Main extends Application {
 
 
 
-        editArea.add(downloadButton, 0, 0);
-        editArea.add(uploadButton, 1, 0);
-        table.getColumns().add(clientColumn);
-        table.getColumns().add(serverColumn);
+        buttonArea.add(downloadButton, 0, 0);
+        buttonArea.add(uploadButton, 1, 0);
+        clientTable.getColumns().add(localColumn);
+        serverTable.getColumns().add(serverColumn);
 
         layout = new BorderPane();
-        layout.setCenter(table);
-        layout.setTop(editArea);
+        layout.setLeft(clientTable);
+
+        layout.setRight(serverTable);
+        layout.setTop(buttonArea);
 
         Scene scene = new Scene(layout, 600, 600);
         primaryStage.setScene(scene);
