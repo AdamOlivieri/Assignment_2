@@ -13,7 +13,7 @@ import javafx.collections.ObservableList;
 
 public class DataSource {
     public static File clientText = new File("clienttext/");
-    public static File serverText;
+    public static File serverText = new File("servertext/");
 
     //public static File serverText = new File("server folder location");
 
