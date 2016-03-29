@@ -10,11 +10,15 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.event.*;
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 public class Main extends Application {
     private BorderPane layout;
     private TableView<File> clientTable;
     private TableView<File> serverTable;
+
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -41,11 +45,26 @@ public class Main extends Application {
         serverColumn.setMinWidth(300);
         serverColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
+
+
         Button uploadButton = new Button("Upload");
         uploadButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Upload Pressed");
+                try{
+                    FileShareServer server = new FileShareServer(8080);
+                    String clientTextName = clientTable.getSelectionModel().getSelectedItem().toString();
+                    Socket socket = new Socket("localhost", 8080);
+                    PrintWriter out = new PrintWriter(socket.getOutputStream());
+                    server.handleRequests();
+
+                    //upload foldername textfilename
+                    out.print("upload clienttext " + clientTextName);
+                    out.flush();
+
+                    socket.close();
+
+                }catch(IOException e) {e.printStackTrace();}
             }
         });
 
@@ -53,7 +72,19 @@ public class Main extends Application {
         downloadButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Download Pressed");
+                try{
+                FileShareServer server = new FileShareServer(8080);
+                String serverTextName = serverTable.getSelectionModel().getSelectedItem().toString();
+                Socket socket = new Socket("localhost", 8080);
+                PrintWriter out = new PrintWriter(socket.getOutputStream());
+                server.handleRequests();
+
+                //download foldername textfilename
+                out.print("download servertext " + serverTextName);
+                out.flush();
+
+                socket.close();
+                }catch(IOException e) {e.printStackTrace();}
             }
         });
 
@@ -75,8 +106,12 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    public static void setup() throws IOException {
+
+    }
 
     public static void main(String[] args) {
         launch(args);
     }
 }
+

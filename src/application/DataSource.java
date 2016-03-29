@@ -33,7 +33,7 @@ public class DataSource {
         File[] textFiles = serverText.listFiles();
 
         for(int i = 0; i < textFiles.length; i++){
-            serverTextFiles.add(new File("clienttext/" + textFiles[i].getName()));
+            serverTextFiles.add(new File("servertext/" + textFiles[i].getName()));
         }*/
         return null;
     }
