@@ -2,7 +2,6 @@ package application;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.scene.chart.PieChart;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
@@ -12,14 +11,12 @@ import javafx.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.ConnectException;
 import java.net.Socket;
 
 public class Main extends Application {
     private BorderPane layout;
     private TableView<File> clientTable;
     private TableView<String> serverTable;
-
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -53,7 +50,8 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try{
-                    String clientTextName = clientTable.getSelectionModel().getSelectedItem().toString();
+                    String clientTextName = clientTable.getSelectionModel(
+                            ).getSelectedItem().toString();
                     Socket socket = new Socket("localhost", 8080);
                     PrintWriter out = new PrintWriter(socket.getOutputStream());
 
@@ -71,12 +69,17 @@ public class Main extends Application {
             }
         });
 
+
+
+
+
         Button downloadButton = new Button("Download");
         downloadButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try{
-                    String serverTextName = serverTable.getSelectionModel().getSelectedItem();
+                    String serverTextName = serverTable.getSelectionModel(
+                            ).getSelectedItem();
                     Socket socket = new Socket("localhost", 8080);
                     PrintWriter out = new PrintWriter(socket.getOutputStream());
 
@@ -95,6 +98,7 @@ public class Main extends Application {
 
 
 
+
         buttonArea.add(downloadButton, 0, 0);
         buttonArea.add(uploadButton, 1, 0);
         clientTable.getColumns().add(localColumn);
@@ -109,10 +113,6 @@ public class Main extends Application {
         Scene scene = new Scene(layout, 600, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-
-    public static void setup() throws IOException {
-
     }
 
     public static void main(String[] args) {
