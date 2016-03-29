@@ -52,11 +52,9 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try{
-                    FileShareServer server = new FileShareServer(8080);
                     String clientTextName = clientTable.getSelectionModel().getSelectedItem().toString();
                     Socket socket = new Socket("localhost", 8080);
                     PrintWriter out = new PrintWriter(socket.getOutputStream());
-                    server.handleRequests();
 
                     //upload foldername textfilename
                     out.print("upload clienttext " + clientTextName);
@@ -64,7 +62,11 @@ public class Main extends Application {
 
                     socket.close();
 
-                }catch(IOException e) {e.printStackTrace();}
+                }catch(IOException e) {
+                    e.printStackTrace();
+                }catch (NullPointerException e) {
+                    System.err.println("Select from the client list to upload");
+                }
             }
         });
 
@@ -73,18 +75,20 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try{
-                FileShareServer server = new FileShareServer(8080);
-                String serverTextName = serverTable.getSelectionModel().getSelectedItem().toString();
-                Socket socket = new Socket("localhost", 8080);
-                PrintWriter out = new PrintWriter(socket.getOutputStream());
-                server.handleRequests();
+                    String serverTextName = serverTable.getSelectionModel().getSelectedItem().toString();
+                    Socket socket = new Socket("localhost", 8080);
+                    PrintWriter out = new PrintWriter(socket.getOutputStream());
 
-                //download foldername textfilename
-                out.print("download servertext " + serverTextName);
-                out.flush();
+                    //download foldername textfilename
+                    out.print("download servertext " + serverTextName);
+                    out.flush();
 
-                socket.close();
-                }catch(IOException e) {e.printStackTrace();}
+                    socket.close();
+                }catch(IOException e) {
+                    e.printStackTrace();
+                }catch (NullPointerException e) {
+                    System.err.println("Select from the server list to download");
+                }
             }
         });
 
