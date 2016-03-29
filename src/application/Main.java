@@ -8,9 +8,8 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.event.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+
+import java.io.*;
 import java.net.Socket;
 
 public class Main extends Application {
@@ -59,6 +58,12 @@ public class Main extends Application {
                     out.print("upload " + clientTextName);
                     out.flush();
 
+                    File file = new File(/*"clienttext/" + */clientTextName);
+                    FileInputStream in = new FileInputStream(file);
+                    OutputStream uout = socket.getOutputStream();
+                    copyAllBytes(in, uout);
+
+                    in.close();
                     socket.close();
 
                 }catch(IOException e) {
@@ -68,10 +73,6 @@ public class Main extends Application {
                 }
             }
         });
-
-
-
-
 
         Button downloadButton = new Button("Download");
         downloadButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -86,6 +87,11 @@ public class Main extends Application {
                     out.print("download " + serverTextName);
                     out.flush();
 
+                    OutputStream dout = new FileOutputStream(new File(serverTextName));
+                    InputStream in = socket.getInputStream();
+                    copyAllBytes(in, dout);
+
+                    dout.close();
                     socket.close();
                 }catch(IOException e) {
                     e.printStackTrace();
@@ -112,6 +118,15 @@ public class Main extends Application {
         Scene scene = new Scene(layout, 600, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private void copyAllBytes(InputStream in, OutputStream out)
+            throws IOException {
+        byte[] buffer = new byte[1024];
+        int numBytes = -1;
+        while ((numBytes = in.read(buffer)) > 0) {
+            out.write(buffer);
+        }
     }
 
     public static void main(String[] args) {

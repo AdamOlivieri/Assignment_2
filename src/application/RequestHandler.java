@@ -44,16 +44,42 @@ public class RequestHandler implements Runnable{
                 socket.close();
             }
             else if (command[0].equalsIgnoreCase("upload")){
-                System.out.println(command[1]);
+                String[] textName = command[1].split("/");
+                OutputStream out = new FileOutputStream(new File("servertext/" + textName[1]));
+                InputStream upin = socket.getInputStream();
+                copyAllBytes(upin, out);
+
+                out.close();
+                upin.close();
+
+                //System.out.println(command[1]);
             }
             else if (command[0].equalsIgnoreCase("download")){
-                System.out.println(command[1]);
+                String[] stextName = command[1].split("/");
+                File downfile = new File("clienttext/" + stextName[1]);
+                OutputStream out = socket.getOutputStream();
+                InputStream doin = new FileInputStream(downfile);
+                copyAllBytes(doin, out);
+
+                out.close();
+                doin.close();
+
+
+                //System.out.println(command[1]);
             }
             in.close();
         } catch(IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void copyAllBytes(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int numBytes = -1;
+        while ((numBytes = in.read(buffer)) > 0) {
+            out.write(buffer);
+        }
     }
 
     public String upload(String filename){
