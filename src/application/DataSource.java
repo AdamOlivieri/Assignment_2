@@ -6,6 +6,7 @@ package application;
 import java.io.*;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,15 +28,23 @@ public class DataSource {
         return clientTextFiles;
     }
 
-    public static ObservableList<File> getAllServerTextFiles() throws IOException {
-        /*ServerSocket serverSocket = new ServerSocket(8080);
-        ObservableList<File> serverTextFiles = FXCollections.observableArrayList();
-        File[] textFiles = serverText.listFiles();
+    public static ObservableList<String> getAllServerTextFiles() throws IOException {
+        Socket socket = new Socket("localhost", 8080);
+        ObservableList<String> serverTextFiles = FXCollections.observableArrayList();
+        PrintWriter out = new PrintWriter(socket.getOutputStream());
+        out.print("DIR");
 
-        for(int i = 0; i < textFiles.length; i++){
-            serverTextFiles.add(new File("servertext/" + textFiles[i].getName()));
-        }*/
-        return null;
+        BufferedReader in = new BufferedReader(new InputStreamReader(
+                socket.getInputStream()));
+
+        /*String input;
+        while ((input = in.readLine())!= null)
+            System.out.println(input);*/
+        //in.close();
+
+        socket.close();
+
+        return serverTextFiles;
     }
 
 }

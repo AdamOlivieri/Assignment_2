@@ -32,10 +32,18 @@ public class RequestHandler implements Runnable{
             );
 
             String[] command = in.readLine().split(" ");
-            if (command[0].equalsIgnoreCase("dir")){
+            System.out.println(command[0]); // remove this after
+            in.close();
+            if (command[0].equals("DIR")){
                 String serverTexts[] = (new File("servertext/")).list();
-                for (int i = 0; i < serverTexts.length; i++)
-                    System.out.println(serverTexts[i]);
+                PrintWriter out = new PrintWriter(socket.getOutputStream());
+                for (int i = 0; i < serverTexts.length; i++) {
+                    out.print(serverTexts[i]);
+                }
+
+                out.flush();
+
+                socket.close();
             }
             else if (command[0].equalsIgnoreCase("upload")){
                 upload(command[1]);

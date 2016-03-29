@@ -12,12 +12,13 @@ import javafx.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 
 public class Main extends Application {
     private BorderPane layout;
     private TableView<File> clientTable;
-    private TableView<File> serverTable;
+    private TableView<String> serverTable;
 
 
     @Override
@@ -29,6 +30,7 @@ public class Main extends Application {
 
         serverTable = new TableView<>();
         serverTable.setItems(DataSource.getAllServerTextFiles());
+        System.out.println("Got all server text files");
 
         GridPane buttonArea = new GridPane();
         buttonArea.setPadding(new Insets(10, 10, 10, 10));
@@ -40,7 +42,7 @@ public class Main extends Application {
         localColumn.setMinWidth(300);
         localColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn<File,String> serverColumn;
+        TableColumn<String, String> serverColumn;
         serverColumn = new TableColumn<>("Server");
         serverColumn.setMinWidth(300);
         serverColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -57,7 +59,7 @@ public class Main extends Application {
                     PrintWriter out = new PrintWriter(socket.getOutputStream());
 
                     //upload foldername textfilename
-                    out.print("upload clienttext " + clientTextName);
+                    out.print("upload " + clientTextName);
                     out.flush();
 
                     socket.close();
@@ -80,7 +82,7 @@ public class Main extends Application {
                     PrintWriter out = new PrintWriter(socket.getOutputStream());
 
                     //download foldername textfilename
-                    out.print("download servertext " + serverTextName);
+                    out.print("download " + serverTextName);
                     out.flush();
 
                     socket.close();
