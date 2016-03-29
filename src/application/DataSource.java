@@ -13,7 +13,6 @@ import javafx.collections.ObservableList;
 
 public class DataSource {
     public static File clientText = new File("clienttext/");
-    public static File serverText = new File("servertext/");
 
     //public static File serverText = new File("server folder location");
 
@@ -31,9 +30,9 @@ public class DataSource {
 
 
 
-    public static ObservableList<String> getAllServerTextFiles() throws IOException {
+    public static ObservableList<ServerFile> getAllServerTextFiles() throws IOException {
         Socket socket = new Socket("localhost", 8080);
-        ObservableList<String> serverTextFiles = FXCollections.observableArrayList();
+        ObservableList<ServerFile> serverTextFiles = FXCollections.observableArrayList();
         PrintWriter out = new PrintWriter(socket.getOutputStream());
         out.println("DIR");
         out.flush();
@@ -41,7 +40,7 @@ public class DataSource {
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         String line;
         while ((line = in.readLine()) != null) {
-            serverTextFiles.add(new String(line));
+            serverTextFiles.add(new ServerFile(line));
         }
 
         in.close();

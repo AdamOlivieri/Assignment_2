@@ -16,7 +16,7 @@ import java.net.Socket;
 public class Main extends Application {
     private BorderPane layout;
     private TableView<File> clientTable;
-    private TableView<String> serverTable;
+    private TableView<ServerFile> serverTable;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -38,7 +38,7 @@ public class Main extends Application {
         localColumn.setMinWidth(300);
         localColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn<String, String> serverColumn;
+        TableColumn<ServerFile, String> serverColumn;
         serverColumn = new TableColumn<>("Server");
         serverColumn.setMinWidth(300);
         serverColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -78,8 +78,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try{
-                    String serverTextName = serverTable.getSelectionModel(
-                            ).getSelectedItem();
+                    String serverTextName = serverTable.getSelectionModel().getSelectedItem().name;
                     Socket socket = new Socket("localhost", 8080);
                     PrintWriter out = new PrintWriter(socket.getOutputStream());
 
