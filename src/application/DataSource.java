@@ -32,16 +32,16 @@ public class DataSource {
         Socket socket = new Socket("localhost", 8080);
         ObservableList<String> serverTextFiles = FXCollections.observableArrayList();
         PrintWriter out = new PrintWriter(socket.getOutputStream());
-        out.print("DIR");
+        out.println("DIR");
+        out.flush();
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(
-                socket.getInputStream()));
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String line;
+        while ((line = in.readLine()) != null) {
+            serverTextFiles.add(new String(line));
+        }
 
-        /*String input;
-        while ((input = in.readLine())!= null)
-            System.out.println(input);*/
-        //in.close();
-
+        in.close();
         socket.close();
 
         return serverTextFiles;

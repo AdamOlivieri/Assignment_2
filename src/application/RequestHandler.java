@@ -31,26 +31,25 @@ public class RequestHandler implements Runnable{
                     )
             );
 
-            String[] command = in.readLine().split(" ");
-            System.out.println(command[0]); // remove this after
-            in.close();
+            String[] command = in.readLine().split(" ", 2);
+            System.out.print("\n"+command[0]+" "); //              remove this after
             if (command[0].equals("DIR")){
                 String serverTexts[] = (new File("servertext/")).list();
                 PrintWriter out = new PrintWriter(socket.getOutputStream());
                 for (int i = 0; i < serverTexts.length; i++) {
-                    out.print(serverTexts[i]);
+                    out.println(serverTexts[i]);
                 }
-
-                out.flush();
+                out.close();
 
                 socket.close();
             }
             else if (command[0].equalsIgnoreCase("upload")){
-                upload(command[1]);
+                System.out.println(command[1]);
             }
             else if (command[0].equalsIgnoreCase("download")){
-                download(command[1]);
+                System.out.println(command[1]);
             }
+            in.close();
         } catch(IOException e) {
             e.printStackTrace();
         }

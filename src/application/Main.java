@@ -30,7 +30,6 @@ public class Main extends Application {
 
         serverTable = new TableView<>();
         serverTable.setItems(DataSource.getAllServerTextFiles());
-        System.out.println("Got all server text files");
 
         GridPane buttonArea = new GridPane();
         buttonArea.setPadding(new Insets(10, 10, 10, 10));
@@ -77,7 +76,7 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try{
-                    String serverTextName = serverTable.getSelectionModel().getSelectedItem().toString();
+                    String serverTextName = serverTable.getSelectionModel().getSelectedItem();
                     Socket socket = new Socket("localhost", 8080);
                     PrintWriter out = new PrintWriter(socket.getOutputStream());
 
