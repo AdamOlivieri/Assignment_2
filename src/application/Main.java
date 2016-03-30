@@ -22,9 +22,11 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setTitle("FileSharer v1.0");
 
+        //creates a table for client files
         clientTable = new TableView<>();
         clientTable.setItems(DataSource.getAllClientTextFiles());
 
+        //creates another table for server files
         serverTable = new TableView<>();
         serverTable.setItems(DataSource.getAllServerTextFiles());
 
@@ -34,10 +36,10 @@ public class Main extends Application {
         buttonArea.setHgap(10);
 
         //Client Table
-        TableColumn<File,String> localColumn;
-        localColumn = new TableColumn<>("Local");
-        localColumn.setMinWidth(300);
-        localColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn<File,String> clientColumn;
+        clientColumn = new TableColumn<>("Client");
+        clientColumn.setMinWidth(300);
+        clientColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
         //Server Table
         TableColumn<ServerFile, String> serverColumn;
@@ -58,17 +60,20 @@ public class Main extends Application {
                     Socket socket = new Socket("localhost", 8080);
                     PrintWriter out = new PrintWriter(socket.getOutputStream());
 
-                    out.println("upload " + clientTextName);
+                    //sends command to server
+                    out.println("UPLOAD " + clientTextName);
                     out.flush();
 
-                    //accessing Server sockets for upload
+                    //accessing server sockets for upload
                     File file = new File(clientTextName);
                     InputStream in = new FileInputStream(file);
                     OutputStream uout = socket.getOutputStream();
                     copyAllBytes(in, uout);
 
+                    //refreshes TableView
                     refresh();
 
+                    //closes everything
                     in.close();
                     uout.close();
                     socket.close();
@@ -93,17 +98,19 @@ public class Main extends Application {
                     Socket socket = new Socket("localhost", 8080);
                     PrintWriter out = new PrintWriter(socket.getOutputStream());
 
-                    //download textfilename
-                    out.println("download " + serverTextName);
+                    //sends command to server
+                    out.println("DOWNLOAD " + serverTextName);
                     out.flush();
 
-                    //accessing Server sockets for download
+                    //accessing server sockets for download
                     OutputStream dout = new FileOutputStream(new File("clienttext/" + serverTextName));
                     InputStream in = socket.getInputStream();
                     copyAllBytes(in, dout);
 
+                    //refreshes TableView
                     refresh();
 
+                    //closes everything
                     dout.close();
                     out.close();
                     socket.close();
@@ -118,25 +125,28 @@ public class Main extends Application {
 
 
 
-
+        //adds buttons
         buttonArea.add(downloadButton, 0, 0);
         buttonArea.add(uploadButton, 1, 0);
-        clientTable.getColumns().add(localColumn);
+
+        //adds columns to the tables
+        clientTable.getColumns().add(clientColumn);
         serverTable.getColumns().add(serverColumn);
 
+        //sets layout
         layout = new BorderPane();
         layout.setLeft(clientTable);
-
         layout.setRight(serverTable);
         layout.setTop(buttonArea);
 
+        //creates and displays scene and stage
         Scene scene = new Scene(layout, 600, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void copyAllBytes(InputStream in, OutputStream out)
-            throws IOException {
+    //transfers a file through a socket
+    private void copyAllBytes(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[1024];
         int numBytes = -1;
         while ((numBytes = in.read(buffer)) > 0) {
@@ -144,7 +154,7 @@ public class Main extends Application {
         }
     }
 
-    //refresh function which resets all columns after an upload or download has finished
+    //refreshes all columns after an upload or download has finished
     public void refresh(){
         try {
             clientTable.setItems(DataSource.getAllClientTextFiles());
