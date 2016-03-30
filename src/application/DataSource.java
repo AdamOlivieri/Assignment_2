@@ -14,8 +14,8 @@ import javafx.collections.ObservableList;
 public class DataSource {
     public static File clientText = new File("clienttext/");
 
-    //public static File serverText = new File("server folder location");
 
+    //ObservableList for Client files using File type
     public static ObservableList<File> getAllClientTextFiles() throws IOException {
         ObservableList<File> clientTextFiles = FXCollections.observableArrayList();
         File[] textFiles = clientText.listFiles();
@@ -29,7 +29,7 @@ public class DataSource {
 
 
 
-
+    //ObservableList for Server files using String type
     public static ObservableList<ServerFile> getAllServerTextFiles() throws IOException {
         Socket socket = new Socket("localhost", 8080);
         ObservableList<ServerFile> serverTextFiles = FXCollections.observableArrayList();

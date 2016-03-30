@@ -18,6 +18,7 @@ public class Main extends Application {
     private TableView<ServerFile> serverTable;
 
     @Override
+    //Client UI
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setTitle("FileSharer v1.0");
 
@@ -32,23 +33,26 @@ public class Main extends Application {
         buttonArea.setVgap(10);
         buttonArea.setHgap(10);
 
+        //Client Table
         TableColumn<File,String> localColumn;
         localColumn = new TableColumn<>("Local");
         localColumn.setMinWidth(300);
         localColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
+        //Server Table
         TableColumn<ServerFile, String> serverColumn;
         serverColumn = new TableColumn<>("Server");
         serverColumn.setMinWidth(300);
         serverColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
 
-
+        //Clientside upload button with sockets
         Button uploadButton = new Button("Upload");
         uploadButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try{
+                    //retrieving Filename from list/folder
                     String clientTextName = clientTable.getSelectionModel(
                             ).getSelectedItem().toString();
                     Socket socket = new Socket("localhost", 8080);
@@ -57,6 +61,7 @@ public class Main extends Application {
                     out.println("upload " + clientTextName);
                     out.flush();
 
+                    //accessing Server sockets for upload
                     File file = new File(clientTextName);
                     InputStream in = new FileInputStream(file);
                     OutputStream uout = socket.getOutputStream();
@@ -76,20 +81,23 @@ public class Main extends Application {
             }
         });
 
+        //Clientside download button with sockets
         Button downloadButton = new Button("Download");
         downloadButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try{
+                    //retrieving Filename from list/folder
                     String serverTextName = serverTable.getSelectionModel(
                             ).getSelectedItem().name;
                     Socket socket = new Socket("localhost", 8080);
                     PrintWriter out = new PrintWriter(socket.getOutputStream());
 
-                    //download foldername textfilename
+                    //download textfilename
                     out.println("download " + serverTextName);
                     out.flush();
 
+                    //accessing Server sockets for download
                     OutputStream dout = new FileOutputStream(new File("clienttext/" + serverTextName));
                     InputStream in = socket.getInputStream();
                     copyAllBytes(in, dout);
@@ -136,6 +144,7 @@ public class Main extends Application {
         }
     }
 
+    //refresh function which resets all columns after an upload or download has finished
     public void refresh(){
         try {
             clientTable.setItems(DataSource.getAllClientTextFiles());

@@ -12,6 +12,8 @@ public class RequestHandler implements Runnable{
     private DataOutputStream requestOutput;
 
     public RequestHandler(Socket socket){
+
+        //request handler multithread
         this.socket = socket;
 
         try{
@@ -23,7 +25,7 @@ public class RequestHandler implements Runnable{
             e.printStackTrace();
         }
     }
-
+    //run function which holds sockets for the buttons
     public void run(){
         try{
             BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -31,6 +33,7 @@ public class RequestHandler implements Runnable{
 
             String[] command = in.readLine().split(" ", 2);
 
+            //server sockets for DIR refresh
             if (command[0].equals("DIR")){
                 String serverTexts[] = (new File("servertext/")).list();
                 PrintWriter out = new PrintWriter(socket.getOutputStream());
@@ -39,6 +42,7 @@ public class RequestHandler implements Runnable{
                 }
                 out.close();
             }
+            //server sockets for Uploading a file to server and saving it
             else if (command[0].equalsIgnoreCase("upload")){
                 String[] textSplit = command[1].split("/");
                 OutputStream out = new FileOutputStream(new File("servertext/" + textSplit[1]));
@@ -48,6 +52,7 @@ public class RequestHandler implements Runnable{
                 out.close();
                 upin.close();
             }
+            //server sockets for Downloading a file from server to client folder
             else if (command[0].equalsIgnoreCase("download")){
                 File downfile = new File("servertext/" + command[1]);
                 InputStream doin = new FileInputStream(downfile);
@@ -64,7 +69,6 @@ public class RequestHandler implements Runnable{
         }
 
     }
-
     private void copyAllBytes(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[1024];
         int numBytes = -1;
