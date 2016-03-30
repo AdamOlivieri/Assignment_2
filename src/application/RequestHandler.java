@@ -30,8 +30,6 @@ public class RequestHandler implements Runnable{
                     socket.getInputStream()));
 
             String[] command = in.readLine().split(" ", 2);
-            System.out.print("\n"+command[0]+" "); //              remove this after
-
 
             if (command[0].equals("DIR")){
                 String serverTexts[] = (new File("servertext/")).list();
@@ -40,34 +38,26 @@ public class RequestHandler implements Runnable{
                     out.println(serverTexts[i]);
                 }
                 out.close();
-
-                socket.close();
             }
             else if (command[0].equalsIgnoreCase("upload")){
-                String[] textName = command[1].split("/");
-                OutputStream out = new FileOutputStream(new File("servertext/" + textName[1]));
+                OutputStream out = new FileOutputStream(new File(command[1]));
                 InputStream upin = socket.getInputStream();
                 copyAllBytes(upin, out);
 
                 out.close();
                 upin.close();
-
-                //System.out.println(command[1]);
             }
             else if (command[0].equalsIgnoreCase("download")){
-                String[] stextName = command[1].split("/");
-                File downfile = new File("clienttext/" + stextName[1]);
+                File downfile = new File("servertext/" + command[1]);
                 OutputStream out = socket.getOutputStream();
                 InputStream doin = new FileInputStream(downfile);
                 copyAllBytes(doin, out);
 
                 out.close();
                 doin.close();
-
-
-                //System.out.println(command[1]);
             }
             in.close();
+            socket.close();
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -80,14 +70,5 @@ public class RequestHandler implements Runnable{
         while ((numBytes = in.read(buffer)) > 0) {
             out.write(buffer);
         }
-    }
-
-    public String upload(String filename){
-        String file = "";
-        return file;
-    }
-
-    public void download(String filename){
-
     }
 }

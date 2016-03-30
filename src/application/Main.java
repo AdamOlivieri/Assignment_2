@@ -54,16 +54,16 @@ public class Main extends Application {
                     Socket socket = new Socket("localhost", 8080);
                     PrintWriter out = new PrintWriter(socket.getOutputStream());
 
-                    //upload foldername textfilename
-                    out.print("upload " + clientTextName);
+                    out.println("upload " + clientTextName);
                     out.flush();
 
-                    File file = new File(/*"clienttext/" + */clientTextName);
-                    FileInputStream in = new FileInputStream(file);
+                    File file = new File(clientTextName);
+                    InputStream in = new FileInputStream(file);
                     OutputStream uout = socket.getOutputStream();
                     copyAllBytes(in, uout);
 
                     in.close();
+                    uout.close();
                     socket.close();
 
                 }catch(IOException e) {
@@ -79,19 +79,21 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try{
-                    String serverTextName = serverTable.getSelectionModel().getSelectedItem().name;
+                    String serverTextName = serverTable.getSelectionModel(
+                            ).getSelectedItem().name;
                     Socket socket = new Socket("localhost", 8080);
                     PrintWriter out = new PrintWriter(socket.getOutputStream());
 
                     //download foldername textfilename
-                    out.print("download " + serverTextName);
+                    out.println("download " + serverTextName);
                     out.flush();
 
-                    OutputStream dout = new FileOutputStream(new File(serverTextName));
+                    OutputStream dout = new FileOutputStream(new File("clienttext/" + serverTextName));
                     InputStream in = socket.getInputStream();
                     copyAllBytes(in, dout);
 
                     dout.close();
+                    out.close();
                     socket.close();
                 }catch(IOException e) {
                     e.printStackTrace();
