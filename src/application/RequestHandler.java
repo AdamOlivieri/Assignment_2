@@ -50,8 +50,8 @@ public class RequestHandler implements Runnable{
             }
             else if (command[0].equalsIgnoreCase("download")){
                 File downfile = new File("servertext/" + command[1]);
-                OutputStream out = socket.getOutputStream();
                 InputStream doin = new FileInputStream(downfile);
+                OutputStream out = socket.getOutputStream();
                 copyAllBytes(doin, out);
 
                 out.close();

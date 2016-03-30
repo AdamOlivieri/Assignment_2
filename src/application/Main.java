@@ -52,7 +52,6 @@ public class Main extends Application {
                     String clientTextName = clientTable.getSelectionModel(
                             ).getSelectedItem().toString();
                     Socket socket = new Socket("localhost", 8080);
-                    System.out.println(clientTextName);
                     PrintWriter out = new PrintWriter(socket.getOutputStream());
 
                     out.println("upload " + clientTextName);
@@ -62,6 +61,8 @@ public class Main extends Application {
                     InputStream in = new FileInputStream(file);
                     OutputStream uout = socket.getOutputStream();
                     copyAllBytes(in, uout);
+
+                    refresh();
 
                     in.close();
                     uout.close();
@@ -93,9 +94,12 @@ public class Main extends Application {
                     InputStream in = socket.getInputStream();
                     copyAllBytes(in, dout);
 
+                    refresh();
+
                     dout.close();
                     out.close();
                     socket.close();
+
                 }catch(IOException e) {
                     e.printStackTrace();
                 }catch (NullPointerException e) {
@@ -130,6 +134,16 @@ public class Main extends Application {
         while ((numBytes = in.read(buffer)) > 0) {
             out.write(buffer);
         }
+    }
+
+    public void refresh(){
+        try {
+            clientTable.setItems(DataSource.getAllClientTextFiles());
+            serverTable.setItems(DataSource.getAllServerTextFiles());
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     public static void main(String[] args) {
