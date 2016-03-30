@@ -52,6 +52,7 @@ public class Main extends Application {
                     String clientTextName = clientTable.getSelectionModel(
                             ).getSelectedItem().toString();
                     Socket socket = new Socket("localhost", 8080);
+                    System.out.println(clientTextName);
                     PrintWriter out = new PrintWriter(socket.getOutputStream());
 
                     out.println("upload " + clientTextName);

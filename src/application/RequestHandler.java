@@ -40,7 +40,8 @@ public class RequestHandler implements Runnable{
                 out.close();
             }
             else if (command[0].equalsIgnoreCase("upload")){
-                OutputStream out = new FileOutputStream(new File(command[1]));
+                String[] textSplit = command[1].split("/");
+                OutputStream out = new FileOutputStream(new File("clienttext/" + textSplit[1]));
                 InputStream upin = socket.getInputStream();
                 copyAllBytes(upin, out);
 
